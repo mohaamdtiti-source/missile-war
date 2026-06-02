@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Missile War Online</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:tahoma;
+}
+
+body{
+background:#0f172a;
+color:white;
+min-height:100vh;
+}
+
+.auth-container{
+width:420px;
+max-width:95%;
+margin:60px auto;
+background:#1e293b;
+padding:25px;
+border-radius:15px;
+box-shadow:0 0 20px rgba(0,0,0,.4);
+}
+
+.auth-container h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+.auth-container h2{
+margin-top:15px;
+margin-bottom:10px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+outline:none;
+}
+
+button{
+cursor:pointer;
+border:none;
+border-radius:8px;
+padding:12px;
+}
+
+.auth-btn{
+width:100%;
+background:#2563eb;
+color:white;
+margin-top:10px;
+}
+
+.auth-btn:hover{
+background:#1d4ed8;
+}
+
+#result{
+margin-top:15px;
+text-align:center;
+color:#facc15;
+}
+
+.topbar{
+background:#111827;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:2px solid #1f2937;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+}
+
+.logout-btn{
+background:#dc2626;
+color:white;
+}
+
+.logout-btn:hover{
+background:#b91c1c;
+}
+
+.container{
+padding:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(260px,1fr));
+gap:15px;
+}
+
+.card{
+background:#1e293b;
+padding:15px;
+border-radius:12px;
+box-shadow:0 0 15px rgba(0,0,0,.3);
+}
+
+.card h3{
+margin-bottom:10px;
+}
+
+.resource{
+font-size:18px;
+line-height:2;
+}
+
+.action-btn{
+width:100%;
+margin-top:8px;
+background:#2563eb;
+color:white;
+}
+
+.action-btn:hover{
+background:#1d4ed8;
+}
+
+#timer{
+margin-top:10px;
+color:#facc15;
+}
+
+#welcome{
+color:#22c55e;
+font-weight:bold;
+}
+
+#gamePanel{
+display:none;
+}
+
+#developer{
+position:fixed;
+bottom:10px;
+right:10px;
+font-size:14px;
+opacity:.8;
+}
+
+.level-box{
+font-size:18px;
+line-height:2;
+}
+
+</style>
+
+</head>
+<body>
+
+<div id="authPanel">
+
+<div class="auth-container">
+
+<h1>🚀 Missile War Online</h1>
+
+<h2>ثبت نام</h2>
+
+<input
+type="text"
+id="username"
+placeholder="نام کاربری">
+
+<input
+type="password"
+id="password"
+placeholder="رمز عبور">
+
+<button
+class="auth-btn"
+onclick="register()">
+
+ثبت نام
+
+</button>
+
+<hr style="margin:20px 0;">
+
+<h2>ورود</h2>
+
+<input
+type="text"
+id="loginUsername"
+placeholder="نام کاربری">
+
+<input
+type="password"
+id="loginPassword"
+placeholder="رمز عبور">
+
+<button
+class="auth-btn"
+onclick="login()">
+
+ورود
+
+</button>
+
+<p id="result"></p>
+
+</div>
+
+</div>
+
+<div id="gamePanel">
+
+<div class="topbar">
+
+<div class="logo">
+⚔️ Missile War
+</div>
+
+<div>
+
+کاربر:
+<span id="welcome"></span>
+
+</div>
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+🚪 خروج از حساب
+
+</button>
+
+</div>
+
+<div class="container">
+
+<div class="grid">
+
+<div class="card">
+
+<h3>📊 منابع بازیکن</h3>
+
+<div
+id="resources"
+class="resource">
+
+💰 پول: 0
+<br>
+🔩 آهن: 0
+<br>
+⛽ سوخت: 0
+<br>
+🚀 موشک: 0
+
+</div>
+
+<button
+class="action-btn"
+onclick="collectResources()">
+
+💰 جمع آوری منابع
+
+</button>
+
+<p id="timer"></p>
+
+</div>
+
+<div class="card">
+
+<h3>🏭 کارخانه</h3>
+
+<div
+id="factoryInfo"
+class="level-box">
+
+سطح کارخانه: 1
+
+</div>
+
+<button
+class="action-btn"
+onclick="upgradeFactory()">
+
+⬆️ ارتقای کارخانه
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>⛽ پالایشگاه</h3>
+
+<div
+id="fuelInfo"
+class="level-box">
+
+سطح پالایشگاه: 1
+
+</div>
+
+<button
+class="action-btn"
+onclick="upgradeFuel()">
+
+⬆️ ارتقای پالایشگاه
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>🛡️ دفاع</h3>
+
+<div
+id="defenseInfo"
+class="level-box">
+
+سطح دفاع: 1
+
+</div>
+
+<button
+class="action-btn"
+onclick="upgradeDefense()">
+
+⬆️ ارتقای دفاع
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>🚀 موشک</h3>
+
+<div
+id="missileInfo"
+class="level-box">
+
+موشک ها: 0
+
+</div>
+
+<button
+class="action-btn"
+onclick="buildMissile()">
+
+🚀 ساخت موشک
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="developer">
+
+Developer: mouamadtiti11
+
+</div>
+<script>
+
+let lastCollectTime = 0;
+
+async function register() {
+
+const username =
+document.getElementById("username").value;
+
+const password =
+document.getElementById("password").value;
+
+const response = await fetch("/register", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+username,
+password
+})
+});
+
+const data = await response.json();
+
+document.getElementById("result").innerText =
+data.message || data.error;
+
+}
+
+async function login() {
+
+const username =
+document.getElementById("loginUsername").value;
+
+const password =
+document.getElementById("loginPassword").value;
+
+const response = await fetch("/login", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+username,
+password
+})
+});
+
+const data = await response.json();
+
+if(data.success){
+
+localStorage.setItem(
+"username",
+data.username
+);
+
+showGame();
+
+}else{
+
+document.getElementById("result").innerText =
+data.error;
+
+}
+
+}
+
+function logout(){
+
+localStorage.removeItem("username");
+
+location.reload();
+
+}
+
+function showGame(){
+
+document.getElementById("authPanel").style.display =
+"none";
+
+document.getElementById("gamePanel").style.display =
+"block";
+
+const username =
+localStorage.getItem("username");
+
+document.getElementById("welcome").innerText =
+username;
+
+loadPlayer();
+
+}
+
+async function loadPlayer(){
+
+const username =
+localStorage.getItem("username");
+
+if(!username) return;
+
+const response =
+await fetch("/player/" + username);
+
+const data =
+await response.json();
+
+if(data.error){
+
+alert(data.error);
+return;
+
+}
+
+document.getElementById("resources").innerHTML =
+"💰 پول: " + data.money +
+"<br>🔩 آهن: " + data.iron +
+"<br>⛽ سوخت: " + data.fuel +
+"<br>🚀 موشک: " + data.missiles;
+
+document.getElementById("missileInfo").innerHTML =
+"موشک ها: " + data.missiles;
+
+if(data.factoryLevel){
+
+document.getElementById("factoryInfo").innerHTML =
+"سطح کارخانه: " + data.factoryLevel;
+
+}
+
+if(data.fuelPlantLevel){
+
+document.getElementById("fuelInfo").innerHTML =
+"سطح پالایشگاه: " + data.fuelPlantLevel;
+
+}
+
+if(data.defenseLevel){
+
+document.getElementById("defenseInfo").innerHTML =
+"سطح دفاع: " + data.defenseLevel;
+
+}
+
+}
+
+async function collectResources(){
+
+const now = Date.now();
+
+if(now - lastCollectTime < 120000){
+
+const sec =
+Math.ceil(
+(120000 - (now - lastCollectTime))
+/ 1000
+);
+
+document.getElementById("timer").innerText =
+"⏳ " + sec + " ثانیه مانده";
+
+return;
+
+}
+
+const username =
+localStorage.getItem("username");
+
+const response = await fetch("/collect", {
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+username
+})
+});
+
+const data =
+await response.json();
+
+if(data.success){
+
+lastCollectTime = now;
+
+document.getElementById("resources").innerHTML =
+"💰 پول: " + data.money +
+"<br>🔩 آهن: " + data.iron +
+"<br>⛽ سوخت: " + data.fuel;
+
+document.getElementById("timer").innerText =
+"✅ منابع جمع آوری شد";
+
+}else{
+
+alert(data.error);
+
+}
+
+}
+
+async function buildMissile(){
+
+const username =
+localStorage.getItem("username");
+
+const response = await fetch(
+"/build-missile",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+username
+})
+}
+);
+
+const data =
+await response.json();
+
+if(data.success){
+
+alert("🚀 موشک ساخته شد");
+
+loadPlayer();
+
+}else{
+
+alert(data.error);
+
+}
+
+}
+
+async function upgradeFactory(){
+
+const username =
+localStorage.getItem("username");
+
+const response = await fetch(
+"/upgrade-factory",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+username
+})
+}
+);
+
+const data =
+await response.json();
+
+if(data.success){
+
+alert("🏭 کارخانه ارتقا یافت");
+
+loadPlayer();
+
+}else{
+
+alert(data.error);
+
+}
+
+}
+
+async function upgradeFuel(){
+
+const username =
+localStorage.getItem("username");
+
+const response = await fetch(
+"/upgrade-fuel",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+username
+})
+}
+);
+
+const data =
+await response.json();
+
+if(data.success){
+
+alert("⛽ پالایشگاه ارتقا یافت");
+
+loadPlayer();
+
+}else{
+
+alert(data.error);
+
+}
+
+}
+
+async function upgradeDefense(){
+
+const username =
+localStorage.getItem("username");
+
+const response = await fetch(
+"/upgrade-defense",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+username
+})
+}
+);
+
+const data =
+await response.json();
+
+if(data.success){
+
+alert("🛡️ دفاع ارتقا یافت");
+
+loadPlayer();
+
+}else{
+
+alert(data.error);
+
+}
+
+}
+
+window.onload = () => {
+
+const username =
+localStorage.getItem("username");
+
+if(username){
+
+showGame();
+
+}
+
+};
+
+</script>
+
+</body>
+</html>
