@@ -5,7 +5,7 @@ const db = new sqlite3.Database("missilewar.db");
 db.serialize(() => {
 
 db.run(
-CREATE TABLE IF NOT EXISTS users (
+`CREATE TABLE IF NOT EXISTS users (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 username TEXT UNIQUE,
 password TEXT,
@@ -22,7 +22,7 @@ factory INTEGER DEFAULT 1,
 fuelPlant INTEGER DEFAULT 1,
 defense INTEGER DEFAULT 1
 )
-);
+`);
 
 console.log("Database loaded");
 
